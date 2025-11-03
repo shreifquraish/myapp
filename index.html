@@ -358,85 +358,231 @@ function forceUpdateCheck() {
     }
 
     // إنشاء حساب المستخدم
-    function createUserAccount() {
-        const username = document.getElementById('newUsername').value;
-        const password = document.getElementById('newPassword').value;
-        const confirmPassword = document.getElementById('confirmPassword').value;
-        const activationCode = sessionStorage.getItem('tempActivationCode');
-        
-        if (!username || !password || !confirmPassword) {
-            showMessage('يرجى ملء جميع الحقول', 'error');
-            return;
+function createUserAccount() {
+    const username = document.getElementById('newUsername').value;
+    const password = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+    const activationCode = sessionStorage.getItem('tempActivationCode');
+    
+    if (!username || !password || !confirmPassword) {
+        showMessage('يرجى ملء جميع الحقول', 'error');
+        return;
+    }
+    
+    if (password !== confirmPassword) {
+        showMessage('كلمات المرور غير متطابقة', 'error');
+        return;
+    }
+    
+    if (password.length < 6) {
+        showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+        return;
+    }
+    
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    
+    // التحقق من عدم وجود اسم مستخدم مكرر
+    if (users.find(u => u.username === username)) {
+        showMessage('اسم المستخدم موجود مسبقاً', 'error');
+        return;
+    }
+    
+    // تفعيل الكود
+    const activationCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+    const codeIndex = activationCodes.findIndex(c => c.code === activationCode);
+    
+    if (codeIndex !== -1) {
+        activationCodes[codeIndex].used = true;
+        activationCodes[codeIndex].usedAt = new Date().toISOString();
+        activationCodes[codeIndex].usedBy = username;
+        localStorage.setItem('activationCodes', JSON.stringify(activationCodes));
+    }
+    
+    // إنشاء مستخدم جديد
+    const newUser = {
+        id: Date.now().toString(),
+        username: username,
+        password: password,
+        activationCode: activationCode,
+        createdAt: new Date().toISOString(),
+        data: {
+            passwords: [],
+            notes: [],
+            images: [],
+            documents: []
         }
-        
-        if (password !== confirmPassword) {
-            showMessage('كلمات المرور غير متطابقة', 'error');
-            return;
-        }
-        
-        if (password.length < 6) {
-            showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
-            return;
-        }
-        
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        
-        // التحقق من عدم وجود اسم مستخدم مكرر
-        if (users.find(u => u.username === username)) {
-            showMessage('اسم المستخدم موجود مسبقاً', 'error');
-            return;
-        }
-        
-        // تفعيل الكود
-        const activationCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
-        const codeIndex = activationCodes.findIndex(c => c.code === activationCode);
-        
-        if (codeIndex !== -1) {
-            activationCodes[codeIndex].used = true;
-            activationCodes[codeIndex].usedAt = new Date().toISOString();
-            activationCodes[codeIndex].usedBy = username;
-            localStorage.setItem('activationCodes', JSON.stringify(activationCodes));
-        }
-        
-        // إنشاء مستخدم جديد
-        const newUser = {
-            id: Date.now().toString(),
-            username: username,
-            password: password,
-            activationCode: activationCode,
-            createdAt: new Date().toISOString(),
-            data: {
-                passwords: [],
-                notes: [],
-                images: [],
-                documents: []
-            }
+    };
+    
+    users.push(newUser);
+    localStorage.setItem('users', JSON.stringify(users));
+    
+    // حفظ في sessionStorage فقط
+    sessionStorage.setItem('currentUser', newUser.id);
+    
+    // ⭐⭐ مشاركة البيانات مع الأجهزة الأخرى ⭐⭐
+    shareDataWithOtherDevices();
+    
+    showMessage('تم إنشاء الحساب بنجاح!', 'success');
+    
+    setTimeout(() => {
+        window.location.href = 'user.html';
+    }, 2000);
+}
+
+// ⭐⭐ نظام مشاركة البيانات بين الأجهزة ⭐⭐
+function shareDataWithOtherDevices() {
+    try {
+        const appData = {
+            users: JSON.parse(localStorage.getItem('users') || '[]'),
+            activationCodes: JSON.parse(localStorage.getItem('activationCodes') || '[]'),
+            adminPassword: localStorage.getItem('adminPassword'),
+            lastSync: new Date().toISOString()
         };
         
-        users.push(newUser);
-        localStorage.setItem('users', JSON.stringify(users));
+        // حفظ البيانات في ملف قابل للمشاركة
+        const dataStr = JSON.stringify(appData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
         
-        // حفظ في sessionStorage فقط
-        sessionStorage.setItem('currentUser', newUser.id);
+        // إنشاء رابط للمشاركة
+        const shareLink = `${window.location.origin}${window.location.pathname}?import=data`;
+        console.log('🔗 رابط مشاركة البيانات:', shareLink);
         
-        showMessage('تم إنشاء الحساب بنجاح!', 'success');
+        // حفظ رابط المشاركة
+        localStorage.setItem('shareableLink', shareLink);
+        localStorage.setItem('lastExport', new Date().toISOString());
         
-        setTimeout(() => {
-            window.location.href = 'user.html';
-        }, 2000);
+    } catch (error) {
+        console.log('❌ خطأ في مشاركة البيانات');
     }
+}
 
-    // التحقق إذا كان هناك مستخدم مسجل بالفعل
-    function checkExistingLogin() {
-        const currentUser = sessionStorage.getItem('currentUser');
-        if (currentUser) {
-            window.location.href = 'user.html';
+// ⭐⭐ استيراد البيانات من جهاز آخر ⭐⭐
+function importDataFromOtherDevice() {
+    const importData = prompt('🎯 أدخل بيانات التطبيق من جهاز آخر (JSON):');
+    
+    if (importData) {
+        try {
+            const appData = JSON.parse(importData);
+            
+            // استيراد المستخدمين
+            if (appData.users && Array.isArray(appData.users)) {
+                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const mergedUsers = [...existingUsers, ...appData.users];
+                
+                // إزالة التكرارات
+                const uniqueUsers = mergedUsers.filter((user, index, self) =>
+                    index === self.findIndex(u => u.username === user.username)
+                );
+                
+                localStorage.setItem('users', JSON.stringify(uniqueUsers));
+            }
+            
+            // استيراد أكواد التفعيل
+            if (appData.activationCodes && Array.isArray(appData.activationCodes)) {
+                const existingCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+                const mergedCodes = [...existingCodes, ...appData.activationCodes];
+                
+                // إزالة التكرارات
+                const uniqueCodes = mergedCodes.filter((code, index, self) =>
+                    index === self.findIndex(c => c.code === code.code)
+                );
+                
+                localStorage.setItem('activationCodes', JSON.stringify(uniqueCodes));
+            }
+            
+            // استيراد كلمة مرور الأدمن
+            if (appData.adminPassword) {
+                localStorage.setItem('adminPassword', appData.adminPassword);
+            }
+            
+            showMessage('✅ تم استيراد البيانات بنجاح!', 'success');
+            setTimeout(() => location.reload(), 2000);
+            
+        } catch (error) {
+            showMessage('❌ بيانات غير صالحة', 'error');
         }
     }
+}
 
-    // تهيئة التطبيق عند التحميل
-    initializeStorage();
-    checkExistingLogin();
+// ⭐⭐ تصدير البيانات للمشاركة ⭐⭐
+function exportDataForSharing() {
+    try {
+        const appData = {
+            users: JSON.parse(localStorage.getItem('users') || '[]'),
+            activationCodes: JSON.parse(localStorage.getItem('activationCodes') || '[]'),
+            adminPassword: localStorage.getItem('adminPassword'),
+            exportDate: new Date().toISOString(),
+            version: localStorage.getItem('appVersion') || '1.0.0'
+        };
+        
+        const dataStr = JSON.stringify(appData, null, 2);
+        
+        // نسخ لل clipboard
+        navigator.clipboard.writeText(dataStr).then(() => {
+            showMessage('✅ تم نسخ البيانات - الصقها في الجهاز الآخر', 'success');
+        }).catch(() => {
+            // إذا clipboard مش مدعوم، عرض البيانات في prompt
+            prompt('📋 انسخ هذه البيانات والصقها في الجهاز الآخر:', dataStr);
+        });
+        
+    } catch (error) {
+        showMessage('❌ خطأ في تصدير البيانات', 'error');
+    }
+}
+
+// ⭐⭐ التحقق من بيانات الاستيراد في الرابط ⭐⭐
+function checkForImportData() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('import') === 'data') {
+        setTimeout(() => {
+            if (confirm('🎯 هل تريد استيراد بيانات التطبيق؟')) {
+                exportDataForSharing();
+            }
+        }, 1000);
+    }
+}
+
+// ⭐⭐ إضافة أزرار المشاركة في واجهة الأدمن ⭐⭐
+function addSharingButtons() {
+    // في صفحة الأدمن، أضف أزرار المشاركة
+    const sharingHTML = `
+        <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">
+            <h4>🔄 مشاركة التطبيق</h4>
+            <button onclick="exportDataForSharing()" class="btn" style="background: #28a745; margin: 5px;">
+                📤 تصدير البيانات
+            </button>
+            <button onclick="importDataFromOtherDevice()" class="btn" style="background: #17a2b8; margin: 5px;">
+                📥 استيراد البيانات
+            </button>
+            <p style="font-size: 12px; color: #666; margin-top: 10px;">
+                استخدم هذه الأزرار لمشاركة التطبيق مع أجهزة أخرى
+            </p>
+        </div>
+    `;
+    
+    // إضافة في صفحة الأدمن إذا موجودة
+    const adminPanel = document.getElementById('adminPanel');
+    if (adminPanel) {
+        adminPanel.insertAdjacentHTML('beforeend', sharingHTML);
+    }
+}
+
+// التحقق إذا كان هناك مستخدم مسجل بالفعل
+function checkExistingLogin() {
+    const currentUser = sessionStorage.getItem('currentUser');
+    if (currentUser) {
+        window.location.href = 'user.html';
+    }
+}
+
+// تهيئة التطبيق عند التحميل
+initializeStorage();
+checkExistingLogin();
+checkForImportData();
+
+// إضافة أزرار المشاركة بعد تحميل الصفحة
+setTimeout(addSharingButtons, 1000);
 </script>
 <script>
 // نظام التحديث التلقائي

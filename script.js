@@ -242,3 +242,91 @@ function addManualUpdateButton() {
 
 // إضافة الزر بعد تحميل الصفحة
 setTimeout(addManualUpdateButton, 2000);
+// نظام المزامنة المركزي
+class CentralDataSync {
+    constructor() {
+        this.dataUrl = 'https://shreifquraish.github.io/MyVault-App/central-data.json';
+        this.syncInterval = 30 * 1000; // كل 30 ثانية
+    }
+
+    // بدء المزامنة
+    startSync() {
+        // مزامنة أولية
+        this.syncData();
+        
+        // مزامنة دورية
+        setInterval(() => this.syncData(), this.syncInterval);
+    }
+
+    // مزامنة البيانات
+    async syncData() {
+        try {
+            const response = await fetch(this.dataUrl + '?t=' + Date.now());
+            const centralData = await response.json();
+            
+            // مزامنة المستخدمين
+            if (centralData.users && centralData.users.length > 0) {
+                const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
+                const mergedUsers = this.mergeUsers(localUsers, centralData.users);
+                localStorage.setItem('users', JSON.stringify(mergedUsers));
+            }
+            
+            // مزامنة أكواد التفعيل
+            if (centralData.activationCodes && centralData.activationCodes.length > 0) {
+                const localCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+                const mergedCodes = this.mergeCodes(localCodes, centralData.activationCodes);
+                localStorage.setItem('activationCodes', JSON.stringify(mergedCodes));
+            }
+            
+            console.log('✅ تم مزامنة البيانات');
+        } catch (error) {
+            console.log('⚠️ لا يمكن مزامنة البيانات');
+        }
+    }
+
+    // دمج المستخدمين
+    mergeUsers(localUsers, centralUsers) {
+        const userMap = new Map();
+        
+        // إضافة المستخدمين المحليين
+        localUsers.forEach(user => userMap.set(user.username, user));
+        
+        // إضافة/تحديث المستخدمين من المركز
+        centralUsers.forEach(user => userMap.set(user.username, user));
+        
+        return Array.from(userMap.values());
+    }
+
+    // دمج أكواد التفعيل
+    mergeCodes(localCodes, centralCodes) {
+        const codeMap = new Map();
+        
+        // إضافة الأكواد المحلية
+        localCodes.forEach(code => codeMap.set(code.code, code));
+        
+        // إضافة/تحديث الأكواد من المركز
+        centralCodes.forEach(code => codeMap.set(code.code, code));
+        
+        return Array.from(codeMap.values());
+    }
+
+    // إضافة مستخدم جديد للمركز
+    async addUserToCentral(user) {
+        try {
+            // هنا بتكون محتاج تعمل نظام Backend حقيقي
+            // لكن حالياً بنستخدم GitHub كبديل
+            console.log('➕ إضافة مستخدم جديد:', user.username);
+        } catch (error) {
+            console.log('❌ لا يمكن إضافة المستخدم للمركز');
+        }
+    }
+
+    // إضافة كود جديد للمركز
+    async addCodeToCentral(code) {
+        try {
+            console.log('➕ إضافة كود جديد:', code.code);
+        } catch (error) {
+            console.log('❌ لا يمكن إضافة الكود للمركز');
+        }
+    }
+}

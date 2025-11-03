@@ -523,7 +523,7 @@ class EnhancedAutoUpdater {
         this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
         
         // ⭐⭐ إصدار ثابت - غير الرقم ده علشان توصل تحديث ⭐⭐
-        const latestVersion = "7";
+        const latestVersion = "8";
         const changes = "جارى التحديث";
         
         setTimeout(() => {

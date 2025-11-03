@@ -485,27 +485,31 @@
         }
 
         // تسجيل دخول الأدمن
-        function loginAdmin() {
-// دالة لتغيير كلمة المرور من الأدمن
-function changeAdminPassword(newPassword) {
-    // هنا ممكن نحفظ في ملف أو قاعدة بيانات
-    // لكن حالياً هنخليها ثابتة
-    alert('كلمة المرور ثابتة حالياً: ' + ADMIN_PASSWORD);
+    function loginAdmin() {
+    const password = document.getElementById('adminPassword').value;
+    const storedPassword = localStorage.getItem('adminPassword') || 'Admin30123!';
+    
+    if (password === storedPassword) {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+        showMessage('تم تسجيل الدخول بنجاح', 'success');
+        setTimeout(() => {
+            checkAdminLogin();
+        }, 1000);
+    } else {
+        showMessage('كلمة المرور غير صحيحة', 'error');
+    }
 }
-            const password = document.getElementById('adminPassword').value;
-            const storedPassword = localStorage.getItem('adminPassword') || 'Admin30123!';
-            
-            if (password === storedPassword) {
-                sessionStorage.setItem('adminLoggedIn', 'true');
-                showMessage('تم تسجيل الدخول بنجاح', 'success');
-                setTimeout(() => {
-                    checkAdminLogin();
-                }, 1000);
-            } else {
-                showMessage('كلمة المرور غير صحيحة', 'error');
-            }
-        }
-
+function initializeStorage() {
+    if (!localStorage.getItem('adminPassword')) {
+        localStorage.setItem('adminPassword', 'Admin30123!');
+    }
+    if (!localStorage.getItem('activationCodes')) {
+        localStorage.setItem('activationCodes', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('users')) {
+        localStorage.setItem('users', JSON.stringify([]));
+    }
+}
         // تسجيل خروج الأدمن
         function logoutAdmin() {
             sessionStorage.removeItem('adminLoggedIn');

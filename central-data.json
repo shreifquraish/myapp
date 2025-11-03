@@ -1,6 +1,5 @@
 {
-  "users": [],
-  "activationCodes": [],
-  "adminPassword": "123123",
-  "lastUpdate": "2024-11-03"
+    "activationCodes": [],
+    "lastUpdate": "2024-01-20T12:00:00.000Z",
+    "version": "1.0"
 }

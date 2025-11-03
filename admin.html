@@ -448,24 +448,31 @@
                 </div>
             </div>
 
-            <!-- قسم الإعدادات -->
-            <div id="settings" class="content">
-                <div class="card">
-                    <h3>تغيير كلمة مرور المسؤول</h3>
-                    <div class="input-group">
-                        <label>كلمة المرور الجديدة</label>
-                        <input type="password" id="newAdminPassword" placeholder="كلمة مرور قوية">
-                    </div>
-                    <div class="input-group">
-                        <label>تأكيد كلمة المرور</label>
-                        <input type="password" id="confirmAdminPassword" placeholder="أعد كتابة كلمة المرور">
-                    </div>
-                    <button class="btn" onclick="changeAdminPassword()">تغيير كلمة المرور</button>
-                </div>
-            </div>
-        </div>
+          <!-- قسم الإعدادات -->
+<div id="settings" class="content">
+    <!-- زر النسخ الاحتياطي -->
+    <div class="card">
+        <h3>💾 النسخ الاحتياطي والاستعادة</h3>
+        <p style="color: #666; margin-bottom: 15px;">قم بحفظ واستعادة بيانات التطبيق</p>
+        <button class="btn" onclick="showBackupManager()" style="background: #17a2b8; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; width: 100%;">
+            فتح مدير النسخ الاحتياطية
+        </button>
     </div>
 
+    <!-- تغيير كلمة المرور -->
+    <div class="card">
+        <h3>تغيير كلمة مرور المسؤول</h3>
+        <div class="input-group">
+            <label>كلمة المرور الجديدة</label>
+            <input type="password" id="newAdminPassword" placeholder="كلمة مرور قوية">
+        </div>
+        <div class="input-group">
+            <label>تأكيد كلمة المرور</label>
+            <input type="password" id="confirmAdminPassword" placeholder="أعد كتابة كلمة المرور">
+        </div>
+        <button class="btn" onclick="changeAdminPassword()">تغيير كلمة المرور</button>
+    </div>
+</div>
     <script>
         // التحقق من تسجيل دخول الأدمن
         function checkAdminLogin() {
@@ -908,6 +915,14 @@ function deleteUser(userId) {
         console.error('❌ خطأ في الحذف:', error);
         alert('❌ حدث خطأ أثناء الحذف: ' + error.message);
     }
+}
+</script>
+<script>
+// تحميل script.js يدوياً إذا محملش
+if (typeof showBackupManager === 'undefined') {
+    const script = document.createElement('script');
+    script.src = 'script.js?v=4';
+    document.head.appendChild(script);
 }
 </script>
 </body>

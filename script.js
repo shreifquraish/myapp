@@ -524,7 +524,7 @@ class EnhancedAutoUpdater {
         
         // ⭐⭐ إصدار ثابت - غير الرقم ده علشان توصل تحديث ⭐⭐
         const latestVersion = "7";
-        const changes = "✨ إضافة نظام النسخ الاحتياطي المتكامل";
+        const changes = "جارى التحديث";
         
         setTimeout(() => {
             if (latestVersion !== this.currentVersion) {

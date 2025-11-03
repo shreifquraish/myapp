@@ -601,7 +601,7 @@ class EnhancedAutoUpdater {
     }
 
     async updateFile(filename) {
-        const response = await fetch(`https://shreifquraish.github.io/MyVault-App/${filename}?t=${Date.now()}`);
+        const response = await fetch(`https://shreifquraish.github.io/myapp/${filename}?t=${Date.now()}`);
         const content = await response.text();
         localStorage.setItem(`file_${filename}`, content);
         return content;
@@ -630,7 +630,7 @@ class EnhancedAutoUpdater {
 // ⭐⭐ نظام المزامنة المركزي ⭐⭐
 class CentralDataSync {
     constructor() {
-        this.dataUrl = 'https://shreifquraish.github.io/MyVault-App/central-data.json';
+        this.dataUrl = 'https://shreifquraish.github.io/myapp/central-data.json';
         this.syncInterval = 30 * 1000;
     }
 

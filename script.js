@@ -643,7 +643,7 @@ setTimeout(function() {
     
     initializeAppSafely();
     
-    console.log('✅ الإصدار 6 محمل - جاهز للتحديث');
+    console.log('✅ الإصدار 8 محمل - جاهز للتحديث'); // ⭐⭐ غيرت من 6 لـ8 ⭐⭐
 }, 500);
 
 // إضافة زر تحديث يدوي

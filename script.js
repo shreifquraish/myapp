@@ -791,8 +791,8 @@ setTimeout(function() {
     console.log('✅ التهيئة اكتملت');
 }, 1000);
 // تأكيد تحميل الإصدار الجديد
-localStorage.setItem('appVersion', '5');
-console.log('✅ الإصدار 5 محمل - جاهز للتحديث');
+localStorage.setItem('appVersion', '6');
+console.log('✅ الإصدار 6 محمل - جاهز للتحديث');
 // إضافة زر التحديث اليدوي
 setTimeout(addManualUpdateButton, 3000);
 // إضافة الزر بعد تحميل الصفحة

@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vault - تسجيل الدخول</title>
+    
+    <!-- ⭐⭐ أضف هذه الأسطر ⭐⭐ -->
+    <link rel="stylesheet" href="index.css?v=3">
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <!-- ⭐⭐ نهاية الإضافة ⭐⭐ -->
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        /* ... باقي الـCSS ... */
+    </style>
     
     <title>My Vault</title>
     
@@ -723,5 +742,12 @@ function requestActivationCode() {
 }
 </script>
 <script src="script.js?v=6"></script>
+<script>
+// تأكيد أن النظام شغال
+setTimeout(function() {
+    console.log('✅ نظام النسخ الاحتياطي جاهز');
+    alert('✅ النظام جاهز! اضغط على زر التحديث في الإعدادات');
+}, 2000);
+</script>
 </body>
 </html>

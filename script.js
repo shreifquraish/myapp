@@ -537,24 +537,24 @@ class EnhancedAutoUpdater {
     }
 
     async checkForUpdates() {
-        this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-        this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
-        
-        try {
-            const response = await fetch(this.updateUrl);
-            const data = await response.json();
-            
-            this.showMessage(`الإصدار الحالي: ${this.currentVersion}, الجديد: ${data.version}`, 'info');
-            
-            if (data.version !== this.currentVersion) {
-                this.showUpdateNotification(data);
-            } else {
-                this.showMessage('✅ التطبيق محدث', 'success');
+    this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
+    
+    // إصدار ثابت - غير الرقم ده علشان توصل تحديث
+    const latestVersion = "5";
+    const changes = "✨ إضافة نظام النسخ الاحتياطي المتكامل";
+    
+    setTimeout(() => {
+        if (latestVersion !== this.currentVersion) {
+            if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
+                localStorage.setItem('appVersion', latestVersion);
+                this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');
+                setTimeout(() => location.reload(), 2000);
             }
-        } catch (error) {
-            this.showMessage('❌ لا يمكن الاتصال بالخادم', 'error');
+        } else {
+            this.showMessage('✅ التطبيق محدث', 'success');
         }
-    }
+    }, 1000);
+}
 
     startAutoCheck() {
         setTimeout(() => this.silentCheck(), 10000);

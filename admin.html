@@ -493,7 +493,7 @@ function changeAdminPassword(newPassword) {
     alert('كلمة المرور ثابتة حالياً: ' + ADMIN_PASSWORD);
 }
             const password = document.getElementById('adminPassword').value;
-            const storedPassword = localStorage.getItem('adminPassword') || 'Admin123!';
+            const storedPassword = localStorage.getItem('adminPassword') || 'Admin30123!';
             
             if (password === storedPassword) {
                 sessionStorage.setItem('adminLoggedIn', 'true');

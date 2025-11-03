@@ -522,14 +522,14 @@ class EnhancedAutoUpdater {
     async checkForUpdates() {
         this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
         
-        // ⭐⭐ إصدار جديد علشان يجبر التحديث ⭐⭐
-        const latestVersion = "9";
+        // ⭐⭐ غير الرقم لـ10 ⭐⭐
+        const latestVersion = "10";
         const changes = "✨ تحديث النظام بالكامل + إصلاح الأخطاء";
         
         setTimeout(() => {
-            // ⭐⭐ إجبار التحديث لو الإصدار أقل من 8 ⭐⭐
+            // ⭐⭐ إجبار التحديث لو الإصدار أقل من 10 ⭐⭐
             const currentVerNum = parseInt(this.currentVersion) || 1;
-            if (currentVerNum < 8 || latestVersion !== this.currentVersion) {
+            if (currentVerNum < 10 || latestVersion !== this.currentVersion) {
                 if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
                     localStorage.setItem('appVersion', latestVersion);
                     this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');
@@ -540,7 +540,25 @@ class EnhancedAutoUpdater {
             }
         }, 1000);
     }
-    // ... باقي الكود
+
+    showMessage(text, type) {
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            background: ${type === 'error' ? '#f8d7da' : type === 'success' ? '#d4edda' : '#d1ecf1'};
+            color: ${type === 'error' ? '#721c24' : type === 'success' ? '#155724' : '#0c5460'};
+            padding: 15px; border-radius: 5px; z-index: 10000;
+            border: 1px solid ${type === 'error' ? '#f5c6cb' : type === 'success' ? '#c3e6cb' : '#bee5eb'};
+        `;
+        messageDiv.textContent = text;
+        document.body.appendChild(messageDiv);
+        
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 5000);
+    }
 }
 
     showMessage(text, type)

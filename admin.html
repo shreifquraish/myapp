@@ -487,7 +487,7 @@
         // تسجيل دخول الأدمن
     function loginAdmin() {
     const password = document.getElementById('adminPassword').value;
-    const storedPassword = localStorage.getItem('adminPassword') || 'Admin30123!';
+    const storedPassword = localStorage.getItem('adminPassword')|| 'admin3012330!@';
     
     if (password === storedPassword) {
         sessionStorage.setItem('adminLoggedIn', 'true');
@@ -501,7 +501,7 @@
 }
 function initializeStorage() {
     if (!localStorage.getItem('adminPassword')) {
-        localStorage.setItem('adminPassword', 'Admin30123!');
+        localStorage.setItem('adminPassword', 'Admin3012330!@');
     }
     if (!localStorage.getItem('activationCodes')) {
         localStorage.setItem('activationCodes', JSON.stringify([]));

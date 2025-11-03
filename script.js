@@ -1,24 +1,37 @@
-// تصدير البيانات كملف
-function exportData() {
-    const userData = {
-        passwords: JSON.parse(localStorage.getItem('passwords') || '[]'),
-        activationCodes: JSON.parse(localStorage.getItem('activationCodes') || '[]'),
-        users: JSON.parse(localStorage.getItem('users') || '[]'),
-        exportDate: new Date().toISOString()
-    };
+// ⭐⭐ نظام التهيئة الأولية ⭐⭐
+function initializeStorage() {
+    // كلمة مرور الأدمن
+    if (!localStorage.getItem('adminPassword')) {
+        localStorage.setItem('adminPassword', 'Admin3012330!@');
+    }
     
-    const dataStr = JSON.stringify(userData, null, 2);
-    const blob = new Blob([dataStr], {type: 'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `myvault-backup-${new Date().getTime()}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+    // بيانات المستخدمين
+    if (!localStorage.getItem('users')) {
+        localStorage.setItem('users', JSON.stringify([]));
+    }
     
-    showMessage('✅ تم تصدير النسخة الاحتياطية', 'success');
+    // أكواد التفعيل
+    if (!localStorage.getItem('activationCodes')) {
+        localStorage.setItem('activationCodes', JSON.stringify([]));
+    }
+    
+    // الإصدار الأول
+    if (!localStorage.getItem('appVersion')) {
+        localStorage.setItem('appVersion', '1.0.0');
+    }
 }
 
+// ⭐⭐ تشغيل التهيئة تلقائياً ⭐⭐
+document.addEventListener('DOMContentLoaded', function() {
+    initializeStorage();
+    console.log('✅ التهيئة اكتملت - كلمة المرور: Admin30123!@');
+});
+
+// بديل إذا DOMContentLoaded ما اشتغلش
+setTimeout(function() {
+    initializeStorage();
+    console.log('✅ التهيئة اكتملت - كلمة المرور: Admin30123!@');
+}, 1000);
 // استيراد البيانات
 function importData(event) {
     const file = event.target.files[0];
@@ -523,13 +536,13 @@ class EnhancedAutoUpdater {
         this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
         
         // ⭐⭐ غير الرقم لـ10 ⭐⭐
-        const latestVersion = "10";
+        const latestVersion = "2";
         const changes = "✨ تحديث النظام بالكامل + إصلاح الأخطاء";
         
         setTimeout(() => {
             // ⭐⭐ إجبار التحديث لو الإصدار أقل من 10 ⭐⭐
             const currentVerNum = parseInt(this.currentVersion) || 1;
-            if (currentVerNum < 10 || latestVersion !== this.currentVersion) {
+            if (currentVerNum <2 || latestVersion !== this.currentVersion) {
                 if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
                     localStorage.setItem('appVersion', latestVersion);
                     this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');

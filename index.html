@@ -1,49 +1,10 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Vault - تسجيل الدخول</title>
-    
-    <!-- ⭐⭐ أضف هذه الأسطر ⭐⭐ -->
-    <link rel="stylesheet" href="index.css?v=3">
-    <link rel="icon" type="image/x-icon" href="icon.ico">
-    <!-- ⭐⭐ نهاية الإضافة ⭐⭐ -->
-    
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        /* ... باقي الـCSS ... */
-    </style>
-    
-    <title>My Vault</title>
-    
-    <!-- أضف هذا السطر -->
-    <link rel="stylesheet" href="index.css?v=3">
-    
-    <!-- إذا كان عندك ستايلات أخرى -->
-    <style>
-        /* أي ستايلات إضافية */
-    </style>
-    <script>
-// اختصار لتفعيل التحديث يدوياً (أضفه في console أو في الكود)
-function forceUpdateCheck() {
-    const updater = new AutoUpdater();
-    updater.checkForUpdates();
-}
-
-// اختصار آخر - اضغط F12 في التطبيق واكتب:
-// forceUpdateCheck()
-</script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Vault - تسجيل الدخول</title>
-    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <title>My Vault - خزنتك الآمنة المجانية</title>
+    <link rel="icon" type="image/x-icon" href="icon.png">
     <style>
         * {
             margin: 0;
@@ -191,82 +152,66 @@ function forceUpdateCheck() {
             color: #721c24;
             border: 1px solid #f5c6cb;
         }
+        
+        .free-badge {
+            background: #28a745;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="logo">
-            <h1>🔒 My Vault</h1>
-            <p>خزنتك الآمنة الشخصية</p>
+            <h1>🔒 My Vault <span class="free-badge">مجاني</span></h1>
+            <p>خزنتك الآمنة الشخصية - مجاني تماماً</p>
         </div>
         
         <div id="message" class="message"></div>
         
         <div class="tabs">
             <div class="tab active" onclick="showTab('login')">تسجيل الدخول</div>
-            <div class="tab" onclick="showTab('activate')">تفعيل حساب جديد</div>
+            <div class="tab" onclick="showTab('register')">إنشاء حساب جديد</div>
         </div>
 
         <!-- قسم تسجيل الدخول -->
-<div id="login" class="content active">
-    <div class="input-group">
-        <label for="username">اسم المستخدم</label>
-        <input type="text" id="username" placeholder="أدخل اسم المستخدم">
-    </div>
-    
-    <div class="input-group">
-        <label for="password">كلمة المرور</label>
-        <input type="password" id="password" placeholder="أدخل كلمة المرور">
-    </div>
-    
-    <button class="btn" onclick="loginUser()">تسجيل الدخول</button>
-</div>
+        <div id="login" class="content active">
+            <div class="input-group">
+                <label for="username">اسم المستخدم</label>
+                <input type="text" id="username" placeholder="أدخل اسم المستخدم">
+            </div>
+            
+            <div class="input-group">
+                <label for="password">كلمة المرور</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور">
+            </div>
+            
+            <button class="btn" onclick="loginUser()">تسجيل الدخول</button>
+        </div>
 
-<!-- قسم التفعيل -->
-<div id="activate" class="content">
-    <div class="input-group">
-        <label for="activationCode">كود التفعيل (6 أرقام)</label>
-        <input 
-            type="text" 
-            id="activationCode" 
-            placeholder="أدخل الكود المكون من 6 أرقام"
-            maxlength="6"
-            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
-        >
-    </div>
-    
-    <button class="btn" onclick="showCreateAccount()">تفعيل وإنشاء حساب</button>
-    
-    <!-- ⭐⭐ زر طلب كود التفعيل عبر الواتساب ⭐⭐ -->
-    <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 10px; border: 1px solid #e1e8ed;">
-        <p style="margin-bottom: 10px; color: #666; font-size: 14px;">لا تملك كود تفعيل؟</p>
-        <button class="btn" onclick="requestActivationCode()" style="background: linear-gradient(135deg, #25D366, #128C7E); color: white; border: none;">
-            📲 طلب كود تفعيل عبر الواتساب
-        </button>
-    </div>
-</div>
-
-<!-- قسم إنشاء الحساب -->
-<div id="createAccount" class="content">
-    <div class="input-group">
-        <label for="newUsername">اسم المستخدم الجديد</label>
-        <input type="text" id="newUsername" placeholder="اختر اسم مستخدم">
-    </div>
-    
-    <div class="input-group">
-        <label for="newPassword">كلمة المرور الجديدة</label>
-        <input type="password" id="newPassword" placeholder="اختر كلمة مرور قوية">
-    </div>
-    
-    <div class="input-group">
-        <label for="confirmPassword">تأكيد كلمة المرور</label>
-        <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور">
-    </div>
-    
-    <button class="btn" onclick="createUserAccount()">إنشاء الحساب</button>
-</div>
+        <!-- قسم إنشاء الحساب -->
+        <div id="register" class="content">
+            <div class="input-group">
+                <label for="newUsername">اسم المستخدم الجديد</label>
+                <input type="text" id="newUsername" placeholder="اختر اسم مستخدم">
+            </div>
+            
+            <div class="input-group">
+                <label for="newPassword">كلمة المرور الجديدة</label>
+                <input type="password" id="newPassword" placeholder="اختر كلمة مرور قوية">
+            </div>
+            
+            <div class="input-group">
+                <label for="confirmPassword">تأكيد كلمة المرور</label>
+                <input type="password" id="confirmPassword" placeholder="أعد كتابة كلمة المرور">
+            </div>
+            
+            <button class="btn" onclick="createUserAccount()">إنشاء الحساب مجاناً</button>
+        </div>
         
-        <!-- ⭐⭐ أضف هذا الكود هنا ⭐⭐ -->
         <div class="admin-link">
             <button onclick="openAdmin()" style="
                 background: none;
@@ -279,469 +224,140 @@ function forceUpdateCheck() {
                 margin-top: 15px;
             ">الدخول كمسؤول</button>
         </div>
-        <!-- ⭐⭐ نهاية الكود المضاف ⭐⭐ -->
     </div>
 
     <script>
-    function openAdmin() {
-        window.location.href = 'admin.html';
-    }
-    </script>
-       
-
-    <script>
-    // تهيئة التخزين المحلي
-    function initializeStorage() {
-        if (!localStorage.getItem('adminPassword')) {
-    localStorage.setItem('adminPassword', admin3012330);
-}
+        // تهيئة التخزين المحلي
+        function initializeStorage() {
+            if (!localStorage.getItem('adminPassword')) {
+                localStorage.setItem('adminPassword', 'admin123');
+            }
+            if (!localStorage.getItem('users')) {
+                localStorage.setItem('users', JSON.stringify([]));
+            }
         }
-        if (!localStorage.getItem('activationCodes')) {
-            localStorage.setItem('activationCodes', JSON.stringify([]));
-        }
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([]));
-        }
-    
 
-    function showMessage(text, type) {
-        const messageDiv = document.getElementById('message');
-        messageDiv.textContent = text;
-        messageDiv.className = `message ${type}`;
-        messageDiv.style.display = 'block';
-        
-        setTimeout(() => {
-            messageDiv.style.display = 'none';
-        }, 5000);
-    }
-
-    function showTab(tabName) {
-        document.querySelectorAll('.content').forEach(content => {
-            content.classList.remove('active');
-        });
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        
-        document.getElementById(tabName).classList.add('active');
-        event.target.classList.add('active');
-    }
-
-    // تسجيل الدخول
-    function loginUser() {
-        const username = document.getElementById('username').value;
-        const password = document.getElementById('password').value;
-        
-        if (!username || !password) {
-            showMessage('يرجى ملء جميع الحقول', 'error');
-            return;
-        }
-        
-        const users = JSON.parse(localStorage.getItem('users') || '[]');
-        const user = users.find(u => u.username === username && u.password === password);
-        
-        if (user) {
-            // حفظ في sessionStorage فقط
-            sessionStorage.setItem('currentUser', user.id);
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
             
-            showMessage('تم تسجيل الدخول بنجاح!', 'success');
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // تسجيل الدخول
+        function loginUser() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username || !password) {
+                showMessage('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.username === username && u.password === password);
+            
+            if (user) {
+                // حفظ في sessionStorage فقط
+                sessionStorage.setItem('currentUser', user.id);
+                
+                showMessage('تم تسجيل الدخول بنجاح!', 'success');
+                
+                setTimeout(() => {
+                    window.location.href = 'user.html';
+                }, 2000);
+            } else {
+                showMessage('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
+            }
+        }
+
+        // إنشاء حساب المستخدم (بدون كود تفعيل)
+        function createUserAccount() {
+            const username = document.getElementById('newUsername').value;
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (!username || !password || !confirmPassword) {
+                showMessage('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                showMessage('كلمات المرور غير متطابقة', 'error');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+                return;
+            }
+            
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            
+            // التحقق من عدم وجود اسم مستخدم مكرر
+            if (users.find(u => u.username === username)) {
+                showMessage('اسم المستخدم موجود مسبقاً', 'error');
+                return;
+            }
+            
+            // إنشاء مستخدم جديد (بدون كود تفعيل)
+            const newUser = {
+                id: Date.now().toString(),
+                username: username,
+                password: password,
+                createdAt: new Date().toISOString(),
+                data: {
+                    passwords: [],
+                    notes: [],
+                    images: [],
+                    documents: []
+                }
+            };
+            
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            
+            // حفظ في sessionStorage فقط
+            sessionStorage.setItem('currentUser', newUser.id);
+            
+            showMessage('تم إنشاء الحساب بنجاح!', 'success');
             
             setTimeout(() => {
                 window.location.href = 'user.html';
             }, 2000);
-        } else {
-            showMessage('اسم المستخدم أو كلمة المرور غير صحيحة', 'error');
         }
-    }
 
-    // التحقق من الكود وعرض إنشاء الحساب
-    function showCreateAccount() {
-        const code = document.getElementById('activationCode').value;
-        
-        if (code.length !== 6) {
-            showMessage('الكود يجب أن يكون 6 أرقام', 'error');
-            return;
-        }
-        
-        const activationCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
-        const codeIndex = activationCodes.findIndex(c => c.code === code && c.used === false);
-        
-        if (codeIndex === -1) {
-            showMessage('كود التفعيل غير صحيح أو مستخدم من قبل', 'error');
-            return;
-        }
-        
-        // حفظ الكود مؤقتاً لاستخدامه لاحقاً
-        sessionStorage.setItem('tempActivationCode', code);
-        showTab('createAccount');
-    }
-
-    // إنشاء حساب المستخدم
-function createUserAccount() {
-    const username = document.getElementById('newUsername').value;
-    const password = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmPassword').value;
-    const activationCode = sessionStorage.getItem('tempActivationCode');
-    
-    if (!username || !password || !confirmPassword) {
-        showMessage('يرجى ملء جميع الحقول', 'error');
-        return;
-    }
-    
-    if (password !== confirmPassword) {
-        showMessage('كلمات المرور غير متطابقة', 'error');
-        return;
-    }
-    
-    if (password.length < 6) {
-        showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
-        return;
-    }
-    
-    const users = JSON.parse(localStorage.getItem('users') || '[]');
-    
-    // التحقق من عدم وجود اسم مستخدم مكرر
-    if (users.find(u => u.username === username)) {
-        showMessage('اسم المستخدم موجود مسبقاً', 'error');
-        return;
-    }
-    
-    // تفعيل الكود
-    const activationCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
-    const codeIndex = activationCodes.findIndex(c => c.code === activationCode);
-    
-    if (codeIndex !== -1) {
-        activationCodes[codeIndex].used = true;
-        activationCodes[codeIndex].usedAt = new Date().toISOString();
-        activationCodes[codeIndex].usedBy = username;
-        localStorage.setItem('activationCodes', JSON.stringify(activationCodes));
-    }
-    
-    // إنشاء مستخدم جديد
-    const newUser = {
-        id: Date.now().toString(),
-        username: username,
-        password: password,
-        activationCode: activationCode,
-        createdAt: new Date().toISOString(),
-        data: {
-            passwords: [],
-            notes: [],
-            images: [],
-            documents: []
-        }
-    };
-    
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    
-    // حفظ في sessionStorage فقط
-    sessionStorage.setItem('currentUser', newUser.id);
-    
-    // ⭐⭐ مشاركة البيانات مع الأجهزة الأخرى ⭐⭐
-    shareDataWithOtherDevices();
-    
-    showMessage('تم إنشاء الحساب بنجاح!', 'success');
-    
-    setTimeout(() => {
-        window.location.href = 'user.html';
-    }, 2000);
-}
-
-// ⭐⭐ نظام مشاركة البيانات بين الأجهزة ⭐⭐
-function shareDataWithOtherDevices() {
-    try {
-        const appData = {
-            users: JSON.parse(localStorage.getItem('users') || '[]'),
-            activationCodes: JSON.parse(localStorage.getItem('activationCodes') || '[]'),
-            adminPassword: localStorage.getItem('adminPassword'),
-            lastSync: new Date().toISOString()
-        };
-        
-        // حفظ البيانات في ملف قابل للمشاركة
-        const dataStr = JSON.stringify(appData, null, 2);
-        const blob = new Blob([dataStr], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        
-        // إنشاء رابط للمشاركة
-        const shareLink = `${window.location.origin}${window.location.pathname}?import=data`;
-        console.log('🔗 رابط مشاركة البيانات:', shareLink);
-        
-        // حفظ رابط المشاركة
-        localStorage.setItem('shareableLink', shareLink);
-        localStorage.setItem('lastExport', new Date().toISOString());
-        
-    } catch (error) {
-        console.log('❌ خطأ في مشاركة البيانات');
-    }
-}
-
-// ⭐⭐ استيراد البيانات من جهاز آخر ⭐⭐
-function importDataFromOtherDevice() {
-    const importData = prompt('🎯 أدخل بيانات التطبيق من جهاز آخر (JSON):');
-    
-    if (importData) {
-        try {
-            const appData = JSON.parse(importData);
-            
-            // استيراد المستخدمين
-            if (appData.users && Array.isArray(appData.users)) {
-                const existingUsers = JSON.parse(localStorage.getItem('users') || '[]');
-                const mergedUsers = [...existingUsers, ...appData.users];
-                
-                // إزالة التكرارات
-                const uniqueUsers = mergedUsers.filter((user, index, self) =>
-                    index === self.findIndex(u => u.username === user.username)
-                );
-                
-                localStorage.setItem('users', JSON.stringify(uniqueUsers));
+        // التحقق إذا كان هناك مستخدم مسجل بالفعل
+        function checkExistingLogin() {
+            const currentUser = sessionStorage.getItem('currentUser');
+            if (currentUser) {
+                window.location.href = 'user.html';
             }
-            
-            // استيراد أكواد التفعيل
-            if (appData.activationCodes && Array.isArray(appData.activationCodes)) {
-                const existingCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
-                const mergedCodes = [...existingCodes, ...appData.activationCodes];
-                
-                // إزالة التكرارات
-                const uniqueCodes = mergedCodes.filter((code, index, self) =>
-                    index === self.findIndex(c => c.code === code.code)
-                );
-                
-                localStorage.setItem('activationCodes', JSON.stringify(uniqueCodes));
-            }
-            
-            // استيراد كلمة مرور الأدمن
-            if (appData.adminPassword) {
-                localStorage.setItem('adminPassword', appData.adminPassword);
-            }
-            
-            showMessage('✅ تم استيراد البيانات بنجاح!', 'success');
-            setTimeout(() => location.reload(), 2000);
-            
-        } catch (error) {
-            showMessage('❌ بيانات غير صالحة', 'error');
         }
-    }
-}
 
-// ⭐⭐ تصدير البيانات للمشاركة ⭐⭐
-function exportDataForSharing() {
-    try {
-        const appData = {
-            users: JSON.parse(localStorage.getItem('users') || '[]'),
-            activationCodes: JSON.parse(localStorage.getItem('activationCodes') || '[]'),
-            adminPassword: localStorage.getItem('adminPassword'),
-            exportDate: new Date().toISOString(),
-            version: localStorage.getItem('appVersion') || '1.0.0'
-        };
-        
-        const dataStr = JSON.stringify(appData, null, 2);
-        
-        // نسخ لل clipboard
-        navigator.clipboard.writeText(dataStr).then(() => {
-            showMessage('✅ تم نسخ البيانات - الصقها في الجهاز الآخر', 'success');
-        }).catch(() => {
-            // إذا clipboard مش مدعوم، عرض البيانات في prompt
-            prompt('📋 انسخ هذه البيانات والصقها في الجهاز الآخر:', dataStr);
-        });
-        
-    } catch (error) {
-        showMessage('❌ خطأ في تصدير البيانات', 'error');
-    }
-}
-
-// ⭐⭐ التحقق من بيانات الاستيراد في الرابط ⭐⭐
-function checkForImportData() {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('import') === 'data') {
-        setTimeout(() => {
-            if (confirm('🎯 هل تريد استيراد بيانات التطبيق؟')) {
-                exportDataForSharing();
-            }
-        }, 1000);
-    }
-}
-
-// ⭐⭐ إضافة أزرار المشاركة في واجهة الأدمن ⭐⭐
-function addSharingButtons() {
-    // في صفحة الأدمن، أضف أزرار المشاركة
-    const sharingHTML = `
-        <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 10px;">
-            <h4>🔄 مشاركة التطبيق</h4>
-            <button onclick="exportDataForSharing()" class="btn" style="background: #28a745; margin: 5px;">
-                📤 تصدير البيانات
-            </button>
-            <button onclick="importDataFromOtherDevice()" class="btn" style="background: #17a2b8; margin: 5px;">
-                📥 استيراد البيانات
-            </button>
-            <p style="font-size: 12px; color: #666; margin-top: 10px;">
-                استخدم هذه الأزرار لمشاركة التطبيق مع أجهزة أخرى
-            </p>
-        </div>
-    `;
-    
-    // إضافة في صفحة الأدمن إذا موجودة
-    const adminPanel = document.getElementById('adminPanel');
-    if (adminPanel) {
-        adminPanel.insertAdjacentHTML('beforeend', sharingHTML);
-    }
-}
-
-// التحقق إذا كان هناك مستخدم مسجل بالفعل
-function checkExistingLogin() {
-    const currentUser = sessionStorage.getItem('currentUser');
-    if (currentUser) {
-        window.location.href = 'user.html';
-    }
-}
-
-// تهيئة التطبيق عند التحميل
-initializeStorage();
-checkExistingLogin();
-checkForImportData();
-
-// إضافة أزرار المشاركة بعد تحميل الصفحة
-setTimeout(addSharingButtons, 1000);
-</script>
-<script>
-// نظام التحديث التلقائي
- class AutoUpdater {
-    constructor() {
-        this.updateUrl = 'https://shreifquraish.github.io/myapp/';
-        // ⭐⭐ ديناميكي - بيجيب الإصدار من التخزين ⭐⭐
-        this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-    }
-
-    // ⭐⭐ دالة الفحص الصامت الجديدة ⭐⭐
-    async silentCheck() {
-        try {
-            const response = await fetch(this.updateUrl);
-            const data = await response.json();
-            
-            // ⭐⭐ تحديث currentVersion من التخزين ⭐⭐
-            this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-            
-            if (data.version !== this.currentVersion) {
-                this.showUpdateNotification(data);
-            }
-        } catch (error) {
-            // ميظهرش حاجة
+        function openAdmin() {
+            window.location.href = 'admin.html';
         }
-    }
 
-    async checkForUpdates() {
-        // ⭐⭐ تحديث currentVersion أولاً ⭐⭐
-        this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-        
-        this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
-        
-        try {
-            const response = await fetch(this.updateUrl);
-            const data = await response.json();
-            
-            this.showMessage(`الإصدار الحالي: ${this.currentVersion}, الجديد: ${data.version}`, 'info');
-            
-            if (data.version !== this.currentVersion) {
-                this.showUpdateNotification(data);
-            } else {
-                this.showMessage('✅ التطبيق محدث', 'success');
-            }
-        } catch (error) {
-            this.showMessage('❌ لا يمكن الاتصال بالخادم', 'error');
-        }
-    }
-
-    // دالة لعرض الرسائل للمستخدم
-    showMessage(text, type) {
-        // أنشئ عنصر رسالة مؤقت
-        const messageDiv = document.createElement('div');
-        messageDiv.style.cssText = `
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: ${type === 'error' ? '#f8d7da' : type === 'success' ? '#d4edda' : '#d1ecf1'};
-            color: ${type === 'error' ? '#721c24' : type === 'success' ? '#155724' : '#0c5460'};
-            padding: 15px; border-radius: 5px; z-index: 10000;
-            border: 1px solid ${type === 'error' ? '#f5c6cb' : type === 'success' ? '#c3e6cb' : '#bee5eb'};
-        `;
-        messageDiv.textContent = text;
-        document.body.appendChild(messageDiv);
-        
-        // احذف الرسالة بعد 5 ثواني
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
-            }
-        }, 5000);
-    }
-
-    showUpdateNotification(updateInfo) {
-        if (confirm(`🔄 يوجد تحديث جديد (${updateInfo.version})\n\n${updateInfo.changes}\n\nهل تريد التحديث الآن؟`)) {
-            this.applyUpdate(updateInfo.version); // ⭐⭐ نمرر الإصدار الجديد ⭐⭐
-        }
-    }
-
-    async applyUpdate(newVersion) {
-        this.showMessage('⭐ جاري التحديث الآمن...', 'info');
-        try {
-            // احفظ البيانات الحالية قبل التحديث
-            const currentUsers = localStorage.getItem('users');
-            const currentCodes = localStorage.getItem('activationCodes');
-            const currentAdminPass = localStorage.getItem('adminPassword');
-            
-            // حمل الملفات المحدثة
-            await this.updateFile('user.html');
-            await this.updateFile('admin.html');
-            
-            // ⭐⭐ حفظ الإصدار الجديد ديناميكياً ⭐⭐
-            localStorage.setItem('appVersion', newVersion);
-            
-            this.showMessage('✅ تم التحديث الآمن!', 'success');
-            setTimeout(() => location.reload(), 2000);
-        } catch (error) {
-            this.showMessage('❌ فشل التحديث', 'error');
-        }
-    }
-
-    async updateFile(filename) {
-        const response = await fetch(`https://shreifquraish.github.io/myapp//${filename}?v=${Date.now()}`);
-        const content = await response.text();
-        localStorage.setItem(`file_${filename}`, content);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    const updater = new AutoUpdater();
-    
-    // ⭐⭐ تحقق صامت بعد 3 ثواني - ميظهرش رسائل ⭐⭐
-    setTimeout(() => updater.silentCheck(), 3000);
-    
-    // تحميل الملفات المحدثة من التخزين المحلي
-    loadUpdatedFiles();
-});
-
-function loadUpdatedFiles() {
-    // تحميل الإصدار الحالي من التخزين
-    const savedVersion = localStorage.getItem('appVersion');
-    const currentPage = location.pathname.split('/').pop();
-    
-    // إذا كانت الصفحة الحالية مخزنة محلياً، نستخدمها
-    const savedContent = localStorage.getItem(`file_${currentPage}`);
-    if (savedContent && currentPage !== 'index.html') {
-        document.open();
-        document.write(savedContent);
-        document.close();
-    }
-}
-
-</script>
-<script>
-function requestActivationCode() {
-    const whatsappNumber = "+201003041351";
-    const message = "أريد كود تفعيل";
-    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-    alert('يتم فتح الواتساب...');
-}
-</script>
-<script src="script.js?v=6"></script>
-
+        // تهيئة التطبيق عند التحميل
+        initializeStorage();
+        checkExistingLogin();
+    </script>
 </body>
 </html>

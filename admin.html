@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <script>
+    // نظام تخزين موحد للتطبيقات الهجينة
+    function getStorage(key) {
+        return sessionStorage.getItem(key) || localStorage.getItem(key);
+    }
+
+    function setStorage(key, value) {
+        sessionStorage.setItem(key, value);
+        localStorage.setItem(key, value);
+    }
+    </script>
+
+    <style>
+    /* الـ CSS هنا */
+    </style>
+    <link rel="icon" type="image/x-icon" href="icon.ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vault - لوحة المسؤول</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f1f1f1;
+        }
+        
+        .logo h1 {
+            color: #2c3e50;
+            font-size: 28px;
+        }
+        
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .tab.active {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            color: #3498db;
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: 1px solid #e1e8ed;
+        }
+        
+        .card h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #219a52);
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 14px;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .code-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .code-item.used {
+            border-left-color: #e74c3c;
+            opacity: 0.7;
+        }
+        
+        .user-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .user-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #27ae60;
+        }
+        
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .user-info {
+            flex: 1;
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .user-details {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 15px;
+            border: 1px solid #e1e8ed;
+            display: none;
+        }
+        
+        .user-details.active {
+            display: block;
+        }
+        
+        .details-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 4px;
+        }
+        
+        .details-tab {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .details-tab.active {
+            background: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            color: #3498db;
+        }
+        
+        .details-content {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .details-content.active {
+            display: block;
+        }
+        
+        .data-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .data-item h4 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .password-item {
+            background: #e8f4fd;
+            border-left-color: #3498db;
+        }
+        
+        .note-item {
+            background: #f0f8f0;
+            border-left-color: #27ae60;
+        }
+        
+        .image-item {
+            background: #fff8e1;
+            border-left-color: #f39c12;
+        }
+        
+        .document-item {
+            background: #f4e8f7;
+            border-left-color: #9b59b6;
+        }
+        
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .login-form {
+            max-width: 400px;
+            margin: 100px auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- نموذج تسجيل دخول الأدمن -->
+    <div id="loginForm" class="login-form">
+        <div class="logo" style="text-align: center; margin-bottom: 30px;">
+            <h1>🔐 دخول المسؤول</h1>
+            <p>أدخل كلمة مرور المسؤول</p>
+        </div>
+        
+        <div id="message" class="message"></div>
+        
+        <div class="input-group">
+            <label for="adminPassword">كلمة مرور المسؤول</label>
+            <input type="password" id="adminPassword" placeholder="أدخل كلمة المرور">
+        </div>
+        
+        <button class="btn" onclick="loginAdmin()" style="width: 100%;">دخول</button>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="adminPanel" style="display: none;">
+        <div class="container">
+            <div class="header">
+                <div class="logo">
+                    <h1>🔐 لوحة تحكم المسؤول</h1>
+                </div>
+                <button class="logout-btn" onclick="logoutAdmin()">تسجيل الخروج</button>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">0</div>
+                    <div class="stat-label">إجمالي المستخدمين</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeCodes">0</div>
+                    <div class="stat-label">الأكواد النشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="usedCodes">0</div>
+                    <div class="stat-label">الأكواد المستخدمة</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('codes')">إدارة الأكواد</div>
+                <div class="tab" onclick="showTab('users')">المستخدمين</div>
+                <div class="tab" onclick="showTab('settings')">الإعدادات</div>
+            </div>
+
+            <!-- قسم إدارة الأكواد -->
+            <div id="codes" class="content active">
+                <div class="card">
+                    <h3>إنشاء كود تفعيل جديد</h3>
+                    <div class="input-group">
+                        <label>اكتب الكود (6 أرقام)</label>
+                        <input type="text" id="manualCode" maxlength="6" 
+                               oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                               placeholder="اكتب الكود هنا">
+                    </div>
+                    <button class="btn" onclick="addManualCode()">إضافة الكود</button>
+                </div>
+
+                <div class="card">
+                    <h3>الأكواد المتاحة</h3>
+                    <div class="code-list" id="codesList">
+                        <!-- سيتم ملء الأكواد هنا -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم المستخدمين -->
+            <div id="users" class="content">
+                <div class="card">
+                    <h3>المستخدمين المسجلين</h3>
+                    <div class="user-list" id="usersList">
+                        <!-- سيتم ملء المستخدمين هنا -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- قسم الإعدادات -->
+            <div id="settings" class="content">
+                <div class="card">
+                    <h3>تغيير كلمة مرور المسؤول</h3>
+                    <div class="input-group">
+                        <label>كلمة المرور الجديدة</label>
+                        <input type="password" id="newAdminPassword" placeholder="كلمة مرور قوية">
+                    </div>
+                    <div class="input-group">
+                        <label>تأكيد كلمة المرور</label>
+                        <input type="password" id="confirmAdminPassword" placeholder="أعد كتابة كلمة المرور">
+                    </div>
+                    <button class="btn" onclick="changeAdminPassword()">تغيير كلمة المرور</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // التحقق من تسجيل دخول الأدمن
+        function checkAdminLogin() {
+            const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+            if (isLoggedIn) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                loadAdminData();
+            }
+        }
+
+        // تسجيل دخول الأدمن
+        function loginAdmin() {
+// دالة لتغيير كلمة المرور من الأدمن
+function changeAdminPassword(newPassword) {
+    // هنا ممكن نحفظ في ملف أو قاعدة بيانات
+    // لكن حالياً هنخليها ثابتة
+    alert('كلمة المرور ثابتة حالياً: ' + ADMIN_PASSWORD);
+}
+            const password = document.getElementById('adminPassword').value;
+            const storedPassword = localStorage.getItem('adminPassword') || 'Admin123!';
+            
+            if (password === storedPassword) {
+                sessionStorage.setItem('adminLoggedIn', 'true');
+                showMessage('تم تسجيل الدخول بنجاح', 'success');
+                setTimeout(() => {
+                    checkAdminLogin();
+                }, 1000);
+            } else {
+                showMessage('كلمة المرور غير صحيحة', 'error');
+            }
+        }
+
+        // تسجيل خروج الأدمن
+        function logoutAdmin() {
+            sessionStorage.removeItem('adminLoggedIn');
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('adminPanel').style.display = 'none';
+            document.getElementById('adminPassword').value = '';
+        }
+
+        // إضافة كود يدوي
+        function addManualCode() {
+            const manualCode = document.getElementById('manualCode').value;
+            
+            if (manualCode.length !== 6) {
+                showMessage('الكود لازم يكون 6 أرقام!', 'error');
+                return;
+            }
+            
+            // جيب الأكواد الحالية
+            let codes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+            
+            // شوف إذا الكود موجود already
+            if (codes.find(c => c.code === manualCode)) {
+                showMessage('الكود موجود already!', 'error');
+                return;
+            }
+            
+            // ضيف الكود الجديد
+            const newCode = {
+                code: manualCode,
+                created: new Date().toISOString(),
+                used: false,
+                usedBy: null
+            };
+            
+            codes.push(newCode);
+            localStorage.setItem('activationCodes', JSON.stringify(codes));
+            
+            showMessage('تم إضافة الكود بنجاح!', 'success');
+            document.getElementById('manualCode').value = '';
+            loadCodesList();
+            updateStats();
+        }
+
+        // تحميل بيانات الأدمن
+        function loadAdminData() {
+            updateStats();
+            loadCodesList();
+            loadUsersList();
+        }
+
+        // تحديث الإحصائيات
+        function updateStats() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const codes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+            
+            document.getElementById('totalUsers').textContent = users.length;
+            document.getElementById('activeCodes').textContent = codes.filter(c => !c.used).length;
+            document.getElementById('usedCodes').textContent = codes.filter(c => c.used).length;
+        }
+
+        // تحميل قائمة الأكواد
+        function loadCodesList() {
+            const codes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+            const codesList = document.getElementById('codesList');
+            
+            codesList.innerHTML = '';
+            
+            codes.sort((a, b) => new Date(b.created) - new Date(a.created)).forEach(code => {
+                const codeItem = document.createElement('div');
+                codeItem.className = `code-item ${code.used ? 'used' : ''}`;
+                codeItem.innerHTML = `
+                    <div>
+                        <strong>${code.code}</strong>
+                        <div style="font-size: 12px; color: #666;">
+                            أنشئ في: ${new Date(code.created).toLocaleDateString('ar-EG')}
+                            ${code.used ? ` | مستخدم في: ${new Date(code.usedAt).toLocaleDateString('ar-EG')}` : ''}
+                            ${code.usedBy ? ` | بواسطة: ${code.usedBy}` : ''}
+                        </div>
+                    </div>
+                    <div style="color: ${code.used ? '#e74c3c' : '#27ae60'}; font-weight: bold;">
+                        ${code.used ? 'مستخدم' : 'نشط'}
+                    </div>
+                `;
+                codesList.appendChild(codeItem);
+            });
+        }
+
+        // تحميل قائمة المستخدمين
+        function loadUsersList() {
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const usersList = document.getElementById('usersList');
+            
+            usersList.innerHTML = '';
+            
+            users.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).forEach(user => {
+                const userItem = document.createElement('div');
+                userItem.className = 'user-item';
+                userItem.innerHTML = `
+                    <div class="user-header">
+                        <div class="user-info">
+                            <div style="margin-bottom: 10px;">
+                                <strong>اسم المستخدم: ${user.username}</strong>
+                                <div style="font-size: 12px; color: #666;">
+                                    مسجل منذ: ${new Date(user.createdAt).toLocaleDateString('ar-EG')}
+                                </div>
+                            </div>
+                            <div style="font-size: 14px;">
+                                <div>كود التفعيل: ${user.activationCode}</div>
+                                <div>كلمات مرور محفوظة: ${user.data.passwords.length}</div>
+                                <div>ملاحظات محفوظة: ${user.data.notes.length}</div>
+                                <div>صور محفوظة: ${user.data.images.length}</div>
+                                <div>مستندات محفوظة: ${user.data.documents.length}</div>
+                            </div>
+                        </div>
+                        <div class="user-actions">
+                           <button class="btn btn-sm btn-success" onclick="showUserDetails('${user.id}')">عرض البيانات</button>
+<button class="btn btn-sm btn-danger" onclick="deleteUser('${user.id}')" style="background: #e74c3c; color: white; margin-right: 5px;">🗑️ حذف</button>
+                        </div>
+                    </div>
+                    <div id="userDetails-${user.id}" class="user-details">
+                        <!-- سيتم ملء تفاصيل المستخدم هنا -->
+                    </div>
+                `;
+                usersList.appendChild(userItem);
+            });
+        }
+
+        // عرض تفاصيل المستخدم
+        function showUserDetails(userId) {
+            const detailsDiv = document.getElementById(`userDetails-${userId}`);
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.id === userId);
+            
+            if (!user) return;
+            
+            // تبديل عرض/إخفاء التفاصيل
+            if (detailsDiv.classList.contains('active')) {
+                detailsDiv.classList.remove('active');
+                return;
+            }
+            
+            // إخفاء كل التفاصيل الأخرى
+            document.querySelectorAll('.user-details').forEach(detail => {
+                detail.classList.remove('active');
+            });
+            
+            detailsDiv.innerHTML = `
+                <div class="details-tabs">
+                    <div class="details-tab active" onclick="showUserData('${userId}', 'passwords')">كلمات المرور</div>
+                    <div class="details-tab" onclick="showUserData('${userId}', 'notes')">الملاحظات</div>
+                    <div class="details-tab" onclick="showUserData('${userId}', 'images')">الصور</div>
+                    <div class="details-tab" onclick="showUserData('${userId}', 'documents')">المستندات</div>
+                </div>
+                
+                <div id="userPasswords-${userId}" class="details-content active">
+                    ${loadUserPasswords(user.data.passwords)}
+                </div>
+                
+                <div id="userNotes-${userId}" class="details-content">
+                    ${loadUserNotes(user.data.notes)}
+                </div>
+                
+                <div id="userImages-${userId}" class="details-content">
+                    ${loadUserImages(user.data.images)}
+                </div>
+                
+                <div id="userDocuments-${userId}" class="details-content">
+                    ${loadUserDocuments(user.data.documents)}
+                </div>
+            `;
+            
+            detailsDiv.classList.add('active');
+        }
+
+        // عرض بيانات المستخدم حسب النوع
+        function showUserData(userId, dataType) {
+            // إخفاء كل المحتويات
+            document.querySelectorAll(`#userDetails-${userId} .details-content`).forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // إلغاء تنشيط كل التبويبات
+            document.querySelectorAll(`#userDetails-${userId} .details-tab`).forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // إظهار المحتوى المطلوب
+            document.getElementById(`user${dataType.charAt(0).toUpperCase() + dataType.slice(1)}-${userId}`).classList.add('active');
+            
+            // تنشيط التبويب المطلوب
+            event.target.classList.add('active');
+        }
+
+        // تحميل كلمات مرور المستخدم
+        function loadUserPasswords(passwords) {
+            if (passwords.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div>🔐</div>
+                        <h3>لا توجد كلمات مرور محفوظة</h3>
+                    </div>
+                `;
+            }
+            
+            return passwords.map(password => `
+                <div class="data-item password-item">
+                    <h4>${password.appName}</h4>
+                    <div><strong>البريد الإلكتروني:</strong> ${password.email}</div>
+                    <div><strong>كلمة المرور:</strong> <span style="font-family: monospace; background: #e9ecef; padding: 2px 6px; border-radius: 4px;">${password.password}</span></div>
+                    <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                        تم الحفظ في: ${new Date(password.createdAt).toLocaleDateString('ar-EG')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تحميل ملاحظات المستخدم
+        function loadUserNotes(notes) {
+            if (notes.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div>📝</div>
+                        <h3>لا توجد ملاحظات محفوظة</h3>
+                    </div>
+                `;
+            }
+            
+            return notes.map(note => `
+                <div class="data-item note-item">
+                    <h4>${note.title}</h4>
+                    <div style="color: #666; line-height: 1.5; margin-bottom: 10px;">${note.content}</div>
+                    <div style="font-size: 12px; color: #666;">
+                        تم الحفظ في: ${new Date(note.createdAt).toLocaleDateString('ar-EG')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تحميل صور المستخدم
+        function loadUserImages(images) {
+            if (images.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div>🖼️</div>
+                        <h3>لا توجد صور محفوظة</h3>
+                    </div>
+                `;
+            }
+            
+            return images.map(image => `
+                <div class="data-item image-item">
+                    <h4>${image.name}</h4>
+                    <div style="margin-bottom: 10px;">
+                        <img src="${image.data}" alt="${image.description}" style="max-width: 200px; max-height: 150px; border-radius: 8px;">
+                    </div>
+                    <div><strong>الوصف:</strong> ${image.description || 'لا يوجد وصف'}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                        تم الرفع في: ${new Date(image.createdAt).toLocaleDateString('ar-EG')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تحميل مستندات المستخدم
+        function loadUserDocuments(documents) {
+            if (documents.length === 0) {
+                return `
+                    <div class="empty-state">
+                        <div>📄</div>
+                        <h3>لا توجد مستندات محفوظة</h3>
+                    </div>
+                `;
+            }
+            
+            return documents.map(doc => `
+                <div class="data-item document-item">
+                    <h4>${doc.name}</h4>
+                    <div><strong>النوع:</strong> ${doc.type}</div>
+                    <div><strong>الحجم:</strong> ${(doc.size / 1024).toFixed(2)} كيلوبايت</div>
+                    <div><strong>الوصف:</strong> ${doc.description || 'لا يوجد وصف'}</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 8px;">
+                        تم الرفع في: ${new Date(doc.createdAt).toLocaleDateString('ar-EG')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // تغيير كلمة مرور الأدمن
+        function changeAdminPassword() {
+    const newPassword = document.getElementById('newAdminPassword').value;
+    const confirmPassword = document.getElementById('confirmAdminPassword').value;
+    
+    if (!newPassword || !confirmPassword) {
+        showMessage('يرجى ملء جميع الحقول', 'error');
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        showMessage('كلمات المرور غير متطابقة', 'error');
+        return;
+    }
+    
+    if (newPassword.length < 6) {
+        showMessage('كلمة المرور يجب أن تكون 6 أحرف على الأقل', 'error');
+        return;
+    }
+    
+    // استخدم sessionStorage بدل localStorage للتطبيقات الهجينة
+    sessionStorage.setItem('adminPassword', newPassword);
+    localStorage.setItem('adminPassword', newPassword); // نسخة احتياطية
+    
+    showMessage('تم تغيير كلمة المرور بنجاح', 'success');
+    
+    document.getElementById('newAdminPassword').value = '';
+    document.getElementById('confirmAdminPassword').value = '';
+}
+        // دوال مساعدة
+        function showTab(tabName) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.textContent = text;
+            messageDiv.className = `message ${type}`;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // التهيئة عند تحميل الصفحة
+        checkAdminLogin();
+    </script>
+    <script>
+// نظام تحميل الملفات المحدثة
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPage = 'admin.html';
+    const savedContent = localStorage.getItem(`file_${currentPage}`);
+    
+    if (savedContent) {
+        document.open();
+        document.write(savedContent);
+        document.close();
+        return;
+    }
+    
+    // إذا لم يكن هناك تحديث، شغل الكود العادي
+    if (typeof checkAdminLogin === 'function') checkAdminLogin();
+});
+// دالة حذف المستخدم
+function deleteUser(userId) {
+    console.log('🔄 محاولة حذف مستخدم:', userId);
+    
+    if (!confirm('⚠️ هل أنت متأكد من حذف هذا المستخدم؟ سيتم حذف جميع بياناته نهائياً!')) {
+        console.log('❌ المستخدم ألغى الحذف');
+        return;
+    }
+    
+    try {
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        console.log('👥 عدد المستخدمين قبل الحذف:', users.length);
+        
+        const userIndex = users.findIndex(u => u.id === userId);
+        console.log('🔍 index المستخدم:', userIndex);
+        
+        if (userIndex !== -1) {
+            const username = users[userIndex].username;
+            const activationCode = users[userIndex].activationCode;
+            
+            // حذف المستخدم
+            users.splice(userIndex, 1);
+            localStorage.setItem('users', JSON.stringify(users));
+            console.log('✅ تم حذف المستخدم من localStorage');
+            
+            // استعادة كود التفعيل
+            const activationCodes = JSON.parse(localStorage.getItem('activationCodes') || '[]');
+            const codeIndex = activationCodes.findIndex(c => c.code === activationCode);
+            
+            if (codeIndex !== -1) {
+                activationCodes[codeIndex].used = false;
+                activationCodes[codeIndex].usedBy = null;
+                activationCodes[codeIndex].usedAt = null;
+                localStorage.setItem('activationCodes', JSON.stringify(activationCodes));
+                console.log('✅ تم استعادة كود التفعيل');
+            }
+            
+            // استخدام alert بدل showMessage للتأكد
+            alert(`✅ تم حذف المستخدم "${username}" بنجاح`);
+            
+            // إعادة تحميل الصفحة بدل loadUsersList
+            location.reload();
+        } else {
+            console.log('❌ المستخدم غير موجود');
+            alert('❌ المستخدم غير موجود');
+        }
+    } catch (error) {
+        console.error('❌ خطأ في الحذف:', error);
+        alert('❌ حدث خطأ أثناء الحذف: ' + error.message);
+    }
+}
+</script>
+</body>
+</html>

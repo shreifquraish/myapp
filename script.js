@@ -516,95 +516,27 @@ function setupAutoBackup() {
 // ⭐⭐ نظام التحديث التلقائي المحسن ⭐⭐
 class EnhancedAutoUpdater {
     constructor() {
-        this.updateUrl = 'https://shreifquraish.github.io/MyVault-App/version.json';
         this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-        this.checkInterval = 2 * 60 * 1000;
-    }
-
-    async silentCheck() {
-        try {
-            const response = await fetch(this.updateUrl);
-            const data = await response.json();
-            
-            this.currentVersion = localStorage.getItem('appVersion') || '1.0.0';
-            
-            if (data.version !== this.currentVersion) {
-                this.showUpdateNotification(data);
-            }
-        } catch (error) {
-            // لا تظهر رسائل في الفحص الصامت
-        }
     }
 
     async checkForUpdates() {
-    this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
-    
-    // إصدار ثابت - غير الرقم ده علشان توصل تحديث
-    const latestVersion = "5";
-    const changes = "✨ إضافة نظام النسخ الاحتياطي المتكامل";
-    
-    setTimeout(() => {
-        if (latestVersion !== this.currentVersion) {
-            if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
-                localStorage.setItem('appVersion', latestVersion);
-                this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');
-                setTimeout(() => location.reload(), 2000);
-            }
-        } else {
-            this.showMessage('✅ التطبيق محدث', 'success');
-        }
-    }, 1000);
-}
-
-    startAutoCheck() {
-        setTimeout(() => this.silentCheck(), 10000);
-        setInterval(() => this.silentCheck(), this.checkInterval);
-        console.log('✅ نظام التحديث التلقائي مفعل');
-    }
-
-    showUpdateNotification(updateInfo) {
-        if (confirm(`🔄 يوجد تحديث جديد (${updateInfo.version})\n\n${updateInfo.changes}\n\nهل تريد التحديث الآن؟`)) {
-            this.applyUpdate(updateInfo.version);
-        }
-    }
-
-    async applyUpdate(newVersion) {
-        this.showMessage('🔄 جاري تثبيت التحديث الجديد...', 'info');
+        this.showMessage('🔍 جاري التحقق من التحديثات...', 'info');
         
-        try {
-            const filesToUpdate = [
-                'index.html',
-                'user.html', 
-                'admin.html',
-                'script.js',
-                'index.css'
-            ];
-
-            for (const file of filesToUpdate) {
-                await this.updateFile(file);
-                console.log(`✅ تم تحديث: ${file}`);
+        // ⭐⭐ إصدار ثابت - غير الرقم ده علشان توصل تحديث ⭐⭐
+        const latestVersion = "6";
+        const changes = "✨ إضافة نظام النسخ الاحتياطي المتكامل";
+        
+        setTimeout(() => {
+            if (latestVersion !== this.currentVersion) {
+                if (confirm(`🔄 يوجد تحديث جديد (${latestVersion})\n\n${changes}\n\nهل تريد التحديث الآن؟`)) {
+                    localStorage.setItem('appVersion', latestVersion);
+                    this.showMessage('✅ تم التحديث! جاري إعادة التحميل...', 'success');
+                    setTimeout(() => location.reload(), 2000);
+                }
+            } else {
+                this.showMessage('✅ التطبيق محدث', 'success');
             }
-
-            localStorage.setItem('appVersion', newVersion);
-            this.currentVersion = newVersion;
-            
-            this.showMessage('✅ تم التحديث بنجاح! جاري إعادة التحميل...', 'success');
-            
-            setTimeout(() => {
-                location.reload(true);
-            }, 3000);
-            
-        } catch (error) {
-            this.showMessage('❌ فشل التحديث، جاري المحاولة مرة أخرى', 'error');
-            setTimeout(() => this.applyUpdate(newVersion), 10000);
-        }
-    }
-
-    async updateFile(filename) {
-        const response = await fetch(`https://shreifquraish.github.io/myapp/${filename}?t=${Date.now()}`);
-        const content = await response.text();
-        localStorage.setItem(`file_${filename}`, content);
-        return content;
+        }, 1000);
     }
 
     showMessage(text, type) {
@@ -695,37 +627,24 @@ class CentralDataSync {
 
 // ⭐⭐ التهيئة الآمنة ⭐⭐
 function initializeAppSafely() {
-    // تأخير بسيط لتجنب التكرار
     setTimeout(() => {
         const enhancedUpdater = new EnhancedAutoUpdater();
-        enhancedUpdater.startAutoCheck();
         
         addBackupButtonToAdmin();
         setupAutoBackup();
         
-        loadUpdatedFiles();
-    }, 500);
+        console.log('✅ التهيئة اكتملت');
+    }, 1000);
 }
 
-// بدء التطبيق بشكل آمن
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initializeAppSafely);
-} else {
+// بدء التطبيق
+setTimeout(function() {
+    console.log('🚀 تهيئة التطبيق...');
+    
     initializeAppSafely();
-}
-
-// دالة تحميل الملفات المحدثة
-function loadUpdatedFiles() {
-    const currentPage = location.pathname.split('/').pop();
-    const savedContent = localStorage.getItem(`file_${currentPage}`);
-    if (savedContent && currentPage !== 'index.html') {
-        document.open();
-        document.write(savedContent);
-        document.close();
-        return true;
-    }
-    return false;
-}
+    
+    console.log('✅ الإصدار 6 محمل - جاهز للتحديث');
+}, 500);
 
 // إضافة زر تحديث يدوي
 function addManualUpdateButton() {
@@ -751,49 +670,6 @@ function addManualUpdateButton() {
     };
     document.body.appendChild(updateBtn);
 }
-// ⭐⭐ علّق هذه الأسطر ⭐⭐
 
-// بدء التطبيق بشكل آمن
-// if (document.readyState === 'loading') {
-//     document.addEventListener('DOMContentLoaded', initializeAppSafely);
-// } else {
-//     initializeAppSafely();
-// }
-
-// دالة تحميل الملفات المحدثة
-// function loadUpdatedFiles() {
-//     const currentPage = location.pathname.split('/').pop();
-//     const savedContent = localStorage.getItem(`file_${currentPage}`);
-//     if (savedContent && currentPage !== 'index.html') {
-//         document.open();
-//         document.write(savedContent);
-//         document.close();
-//         return true;
-//     }
-//     return false;
-// }
-// ⭐⭐ كود بديل آمن ⭐⭐
-
-// تهيئة التطبيق مرة واحدة فقط
-setTimeout(function() {
-    console.log('🚀 تهيئة التطبيق...');
-    
-    // نظام التحديث التلقائي
-    const enhancedUpdater = new EnhancedAutoUpdater();
-    enhancedUpdater.startAutoCheck();
-    
-    // إضافة زر النسخ الاحتياطي
-    addBackupButtonToAdmin();
-    
-    // النسخ الاحتياطي التلقائي
-    setupAutoBackup();
-    
-    console.log('✅ التهيئة اكتملت');
-}, 1000);
-// تأكيد تحميل الإصدار الجديد
-localStorage.setItem('appVersion', '6');
-console.log('✅ الإصدار 6 محمل - جاهز للتحديث');
-// إضافة زر التحديث اليدوي
-setTimeout(addManualUpdateButton, 3000);
 // إضافة الزر بعد تحميل الصفحة
 setTimeout(addManualUpdateButton, 2000);
